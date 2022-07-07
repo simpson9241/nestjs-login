@@ -13,7 +13,7 @@ export class UserService {
         private userRepository: Repository<User>,
     ){}
 
-    async create(createUserDTO:CreateUserDTO){
+    async createUser(createUserDTO:CreateUserDTO){
         const isExist = await this.userRepository.findOne({where:{userID:createUserDTO.userID}});
         if (isExist){
             throw new ForbiddenException({
