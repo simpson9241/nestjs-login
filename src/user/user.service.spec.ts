@@ -85,10 +85,10 @@ describe('UserService', () => {
 
     it('should return throw NotFoundException', async () => {
       try {
-        await userService.findOne('unvalid');
+        await userService.findOne('invalid');
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException);
-        expect(e.message).toEqual("User unvalid Not Found");
+        expect(e.message).toEqual("User invalid Not Found");
       }
     })
   });
@@ -96,22 +96,24 @@ describe('UserService', () => {
   describe('updateUser', () => {
     it('should update an user', async () => {
       const updateUserDTO: UpdateUserDTO = {
-        userID: "dummy",
-        userName: "dummy",
+        userID: "dummy8",
+        userName: "dummy8",
         password: "test",
-        role: "test"
+        role: "updated_user"
       };
       await userService.updateUser(
-        'dummy',
+        'dummy8',
         updateUserDTO
       );
-      console.log(await userService.findOne('dummy'));
-    })
+      const updated_user = await userService.findOne('dummy8');
+      expect(updated_user.role).toEqual('updated_user');
+    });
   });
 
   describe('deleteUser', () => {
     it('should delete an user', async () => {
-      await userService.deleteUser('dummy8')
+
+      await userService.deleteUser('dummy8');
     });
   });
 

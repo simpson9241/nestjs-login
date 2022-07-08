@@ -86,10 +86,10 @@ describe('UserController', () => {
 
     it('should return throw NotFoundException',async ()=>{
       try{
-        await userController.findOne('unvalid');
+        await userController.findOne('invalid');
       }catch(e){
         expect(e).toBeInstanceOf(NotFoundException);
-        expect(e.message).toEqual('User unvalid Not Found');
+        expect(e.message).toEqual('User invalid Not Found');
       }
     })
   });
