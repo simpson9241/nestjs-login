@@ -29,7 +29,7 @@ export class UserService {
     }
 
     async findOne(id: string) {
-        const user = this.userRepository.findOne({
+        const user = await this.userRepository.findOne({
             where: { userID: id },
             select: ["seq", "userID", "userName", "role"],
         }
