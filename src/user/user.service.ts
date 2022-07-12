@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User, UserReturnType } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -12,42 +12,42 @@ export class UserService {
         private userRepository: Repository<User>,
     ) { }
 
-    async createUser(createUserDTO: CreateUserDTO) {
+    async createUser(createUserDTO: CreateUserDTO): Promise<UserReturnType> {
         const isExist = await this.userRepository.findOne({ where: { userID: createUserDTO.userID } });
         if (isExist) {
             throw new ForbiddenException('User Already Exists');
         }
 
-        const { password, ...result } = await this.userRepository.save(createUserDTO);
+        const { password, seq, ...result } = await this.userRepository.save(createUserDTO);
         return result;
     }
 
-    async findAll() {
+    async findAll(): Promise<Array<UserReturnType>> {
         return this.userRepository.find({
-            select: ["seq", "userID", "userName", "role"],
+            select: ["userID", "userName", "role"],
+            order: { seq: 'ASC' }
         });
     }
 
-    async findOne(id: string) {
+    async findOne(id: string): Promise<UserReturnType> {
         const user = await this.userRepository.findOne({
             where: { userID: id },
-            select: ["seq", "userID", "userName", "role"],
-        }
-        );
+            select: ["userID", "userName", "role"],
+        });
         if (!user) {
-            throw new NotFoundException(`User ${id} not Found`);
+            throw new NotFoundException(`User with userID (${id}) Not Found`);
         }
         return user;
     }
 
-    async updateUser(id: string, updateUserDTO: UpdateUserDTO) {
+    async updateUser(id: string, updateUserDTO: UpdateUserDTO): Promise<void> {
         await this.userRepository.update(
             { userID: id },
             updateUserDTO
         );
     }
 
-    async deleteUser(id: string) {
+    async deleteUser(id: string): Promise<void> {
         await this.userRepository.delete({ userID: id });
     }
 }
