@@ -18,3 +18,9 @@ export class User {
   role: string;
 
 }
+
+export type UserReturnType={
+  userID: string;
+  userName: string;
+  role: string;
+}
